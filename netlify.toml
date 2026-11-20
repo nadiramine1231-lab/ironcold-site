@@ -1,7 +1,7 @@
 # IRONCOLD — Netlify (linked to the GitHub repo: every push redeploys)
 # Site:       dist/ (made by scripts/build.mjs from the html/css/js/images)
 # Serveur:    netlify/functions/ → /api/notify (commandes + contact), /api/admin/* (app IRON COLD Commandes)
-# Variables:  ADMIN_PASSWORD, FIREBASE_SERVICE_ACCOUNT_JSON, TELEGRAM_BOT_TOKEN (optionnel)
+# Variables:  ADMIN_PASSWORD, FIREBASE_SERVICE_ACCOUNT_JSON
 [build]
   command = "node scripts/build.mjs"
   publish = "dist"

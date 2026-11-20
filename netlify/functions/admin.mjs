@@ -13,7 +13,7 @@ export default async (req) => {
 
   const orders = store("orders");
 
-  if (route === "me" && req.method === "GET") return json({ ok: true, fcm: fcmReady(), telegram: Boolean(process.env.TELEGRAM_BOT_TOKEN) });
+  if (route === "me" && req.method === "GET") return json({ ok: true, fcm: fcmReady() });
 
   if (route === "devices" && req.method === "POST") {
     const { token, channel, name } = await req.json().catch(() => ({}));

@@ -1,6 +1,6 @@
 /* POST /api/notify — orders (checkout) and contact messages from the site.
    Orders are saved (Netlify Blobs) for the app "IRON COLD Commandes", which gets a push notification
-   with the order sound. Telegram still gets a copy when TELEGRAM_BOT_TOKEN is set.
+   with the order sound. (No Telegram any more.)
    Prices always come from js/products.js, never from the browser. */
 import "../../js/products.js";
 import { store } from "../lib/store.mjs";
@@ -8,20 +8,7 @@ import { fcmAll } from "../lib/fcm.mjs";
 import { json, normPhone } from "../lib/http.mjs";
 
 const PRODUCTS = globalThis.IC_PRODUCTS || [];
-const DEFAULT_CHAT_ID = "8891194734";
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, " ").trim().slice(0, max);
-
-async function telegram(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) return { skipped: true };
-  const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID || DEFAULT_CHAT_ID, text })
-  });
-  if (!r.ok) throw new Error("telegram " + r.status);
-  return { ok: true };
-}
 
 async function handleOrder(d) {
   const phone = normPhone(d.phone);
@@ -48,15 +35,10 @@ async function handleOrder(d) {
   await store("orders").setJSON(id, order);
 
   const lines = items.map((i) => `${i.name.replace(/^IRONCOLD\s+/, "")} ${i.color} (${i.size})${i.qty > 1 ? " ×" + i.qty : ""}`);
-  const when = now.toLocaleString("fr-MA", { timeZone: "Africa/Casablanca", hour12: false });
-  const tgText = `🛒 NOUVELLE COMMANDE — IRONCOLD\n\n👤 ${order.name}\n📞 ${phone}\n📍 ${city}, ${address}\n\n📦 Articles :\n${items.map((i) => `  • ${i.name} (${i.color}) — Taille ${i.size} × ${i.qty}   →   ${i.price * i.qty} MAD`).join("\n")}\n\n💰 Total : ${total} MAD\n\n🕐 ${when}`;
 
   // The order is saved even if a notification fails.
-  const sent = await Promise.allSettled([
-    fcmAll({ title: `🛍️ Nouvelle commande · ${total} MAD`, body: `${order.name} · ${city}\n${lines.join(", ")}`, data: { type: "new_order", ref: id } }),
-    telegram(tgText)
-  ]);
-  sent.forEach((r) => { if (r.status === "rejected") console.error("notify error", r.reason); });
+  await fcmAll({ title: `🛍️ Nouvelle commande · ${total} MAD`, body: `${order.name} · ${city}\n${lines.join(", ")}`, data: { type: "new_order", ref: id } })
+    .catch((e) => console.error("push error", e));
   return json({ ok: true, id, total });
 }
 
@@ -64,13 +46,8 @@ async function handleContact(d) {
   const prenom = clean(d.prenom, 60), nom = clean(d.nom, 60), email = clean(d.email, 120);
   const message = clean(d.message, 2000);
   if (!prenom || !nom || !message || !/^\S+@\S+\.\S+$/.test(email)) return json({ ok: false, error: "fields" }, 400);
-  const when = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca", hour12: false });
-  const text = `📩 NOUVEAU MESSAGE — IRONCOLD\n\n👤 ${prenom} ${nom}\n📧 ${email}\n📞 ${clean(d.phone, 24) || "—"}\n📌 Sujet : ${clean(d.sujet, 80) || "—"}\n\n💬 Message :\n${message}\n\n🕐 ${when}`;
-  const results = await Promise.allSettled([
-    telegram(text),
-    fcmAll({ title: "📩 Nouveau message", body: `${prenom} ${nom} · ${message.slice(0, 120)}`, data: { type: "contact" } })
-  ]);
-  const delivered = results.some((r) => r.status === "fulfilled" && r.value && (r.value.ok || r.value.sent > 0));
+  const r = await fcmAll({ title: "📩 Nouveau message", body: `${prenom} ${nom} · ${message.slice(0, 120)}`, data: { type: "contact" } }).catch(() => ({ sent: 0 }));
+  const delivered = r.sent > 0;
   return delivered ? json({ ok: true }) : json({ ok: false, error: "not-delivered" }, 503);
 }
 
