@@ -8,7 +8,7 @@
   const IC = (window.IC = {});
   const PRODUCTS = window.IC_PRODUCTS || [];
   const WA_NUMBER = '212606685735';
-  const NOTIFY_URL = '/api/notify'; // Netlify Function → Telegram (token stays on the server)
+  const NOTIFY_URL = '/api/notify'; // Netlify Function → saved + push to the IRON COLD Commandes app
   const CART_KEY = 'ironcold_cart_v2';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
