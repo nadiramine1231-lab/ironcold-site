@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>IRONCOLD — Zip Hoodies Premium | Livraison gratuite au Maroc</title>
+  <meta name="description" content="IRONCOLD : zip hoodies premium homme & femme, molleton 330 GSM. Livraison gratuite partout au Maroc, paiement à la livraison.">
+  <meta name="theme-color" content="#07080a">
+  <meta property="og:title" content="IRONCOLD — Zip Up. Stay Cold.">
+  <meta property="og:description" content="Zip hoodies premium homme & femme. Livraison gratuite, paiement à la livraison.">
+  <meta property="og:image" content="images/web/ironcold-zipup-hoodie.webp">
+  <link rel="icon" type="image/png" href="favicon_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ironcold.css">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js">
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</head>
+<body>
+  <script>IC.top({ page: 'home', overlay: true })</script>
+
+  <main>
+    <!-- HERO 3D -->
+    <section class="hero" id="hero">
+      <!-- 3D photo stage: gym / motard backgrounds -->
+      <div class="hero__stage" id="heroStage" aria-hidden="true">
+        <div class="hero__cam" id="heroCam">
+          <div class="hero__slide is-on" data-pos="50% 20%"><img src="images/web/hero-1.webp" srcset="images/web/hero-1-sm.webp 900w, images/web/hero-1.webp 1402w" sizes="100vw" alt="" fetchpriority="high"></div>
+          <div class="hero__slide" data-pos="40% 22%"><img src="images/web/hero-2.webp" srcset="images/web/hero-2-sm.webp 900w, images/web/hero-2.webp 1254w" sizes="100vw" alt="" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="hero__shade"></div>
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__dots" id="heroDots"><button type="button" class="is-on" aria-label="Photo 1"></button><button type="button" aria-label="Photo 2"></button></div>
+      <div class="hero__content">
+        <span class="hero__tag"><i></i>Nouveau drop — Zip hoodies hiver 2026</span>
+        <h1 class="hero__title">
+          <span class="line"><span>Zip up.</span></span>
+          <span class="line"><span><em class="ice-text" style="font-style:normal">Stay cold.</em></span></span>
+        </h1>
+        <p class="hero__sub">Zip hoodies premium homme &amp; femme, molleton 330 GSM. Livraison gratuite partout au Maroc — tu paies à la livraison.</p>
+        <div class="hero__btns">
+          <a href="products.html" class="btn btn--ice btn--shine"><span>Shop<span class="hide-sm"> les zip hoodies</span></span> <i data-icon="arrow"></i></a>
+          <a href="#explore" class="btn btn--ghost">Explorer en 3D</a>
+        </div>
+        <div class="hero__meta">
+          <span class="pill"><i data-icon="flake"></i>330 GSM</span>
+          <span class="pill"><i data-icon="truck"></i>Livraison 24–48H</span>
+          <span class="pill"><i data-icon="cash"></i>Paiement à la livraison</span>
+        </div>
+      </div>
+      <div class="hero__hint" aria-hidden="true">SCROLL</div>
+      <div class="hero__fade"></div>
+    </section>
+
+    <!-- CROSSED IRONCOLD BANDS -->
+    <section class="bands" aria-hidden="true">
+      <div class="band band--b" data-marquee data-speed="60" data-dir="1" data-boost>
+        <div class="mq__track"><div class="mq__group">
+          <span>TRAIN HARD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span class="is-outline">STAY COLD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span>IRONCOLD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span class="is-outline">RIDE COLD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+        </div></div>
+      </div>
+      <div class="band band--a" data-marquee data-speed="70" data-dir="-1" data-boost>
+        <div class="mq__track"><div class="mq__group">
+          <span>IRONCOLD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span class="is-outline">IRONCOLD</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span>LIVRAISON GRATUITE</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+          <span class="is-outline">PAIEMENT À LA LIVRAISON</span><img src="images/web/emblem-black.png" alt="" width="347" height="512">
+        </div></div>
+      </div>
+    </section>
+
+    <!-- GYM x MOTO -->
+    <section class="duality" aria-label="Gym et moto">
+      <div class="wrap duality__head" data-reveal>
+        <span class="eyebrow">Gym × Moto</span>
+        <h2>Deux mondes. <span class="ice-text">Un hoodie.</span></h2>
+      </div>
+      <div class="duality__stage">
+        <a class="dual dual--gym" href="products.html">
+          <img src="images/web/hero-2.webp" alt="Athlète IRONCOLD à la salle" loading="lazy" width="1254" height="1254">
+          <span class="dual__tag">01 — GYM</span>
+          <div class="dual__txt">
+            <span class="dual__icon"><svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M14 12h20"/><rect x="7" y="5" width="6" height="14" rx="1.5"/><rect x="35" y="5" width="6" height="14" rx="1.5"/><path d="M3 9v6M45 9v6"/></svg></span>
+            <b>Train hard.</b>
+            <p>Molleton 330 GSM qui suit chaque rep — de la salle à la rue.</p>
+          </div>
+        </a>
+        <a class="dual dual--moto" href="products.html">
+          <img src="images/web/hero-1.webp" alt="Riders IRONCOLD de nuit à moto" loading="lazy" width="1402" height="1122">
+          <span class="dual__tag">02 — MOTO</span>
+          <div class="dual__txt">
+            <span class="dual__icon"><svg viewBox="0 0 48 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 26C6 13 15 5 26 5c9 0 16 6 17 15l1 8H20c-3 0-5-2-5-5h0c0-2 2-4 4-4h24"/><path d="M6 26l2 8h34l2-6"/></svg></span>
+            <b>Ride cold.</b>
+            <p>Full-zip YKK, chaud sur la route de nuit. Le hoodie des riders.</p>
+          </div>
+        </a>
+        <div class="dual__x" aria-hidden="true">×</div>
+      </div>
+    </section>
+
+    <div class="tread" aria-hidden="true"></div>
+
+    <!-- FEATURED -->
+    <section class="sec" id="drop">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <div>
+            <span class="eyebrow"><i data-icon="flake"></i>Drop 01 — Hiver 2026</span>
+            <h2>Zip <span class="ice-text">Hoodies</span></h2>
+          </div>
+          <a class="link-arrow" href="products.html">Voir toute la collection <i data-icon="arrow"></i></a>
+        </div>
+        <div class="grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <div class="tread tread--rev" aria-hidden="true"></div>
+
+    <!-- 3D CAROUSEL -->
+    <section class="c3d" id="explore">
+      <canvas class="c3d__canvas" id="c3dCanvas" aria-label="Carrousel 3D des zip hoodies — glisse pour tourner, clique pour ouvrir"></canvas>
+      <div class="c3d__fallback">
+        <img src="images/web/ironcold-zipup-hoodie-sm.webp" alt="" loading="lazy" width="480" height="691">
+        <img src="images/web/ironcold-femme-zip-1-sm.webp" alt="" loading="lazy" width="480" height="678">
+        <img src="images/web/ironcold-cold-zip-premium-sm.webp" alt="" loading="lazy" width="480" height="692">
+      </div>
+      <div class="c3d__head">
+        <span class="eyebrow">Explore en 3D</span>
+        <h2>Tourne. <span class="ice-text">Choisis.</span></h2>
+        <p>Glisse pour faire tourner — clique sur le hoodie devant pour l'ouvrir.</p>
+      </div>
+      <div class="c3d__ui">
+        <button class="icon-btn c3d__arrow c3d__arrow--prev" id="c3dPrev" type="button" aria-label="Précédent"><i data-icon="arrow"></i></button>
+        <div class="c3d__info" aria-live="polite">
+          <span class="c3d__name" id="c3dName">IRONCOLD Zip-Up Hoodie</span>
+          <span class="c3d__price" id="c3dPrice">339 MAD</span>
+          <a class="btn btn--ice" id="c3dLink" href="products.html">Voir le produit <i data-icon="arrow"></i></a>
+        </div>
+        <button class="icon-btn c3d__arrow c3d__arrow--next" id="c3dNext" type="button" aria-label="Suivant"><i data-icon="arrow"></i></button>
+      </div>
+    </section>
+
+    <!-- STICKY 360 FLIP -->
+    <section class="flip" data-progress aria-label="Détails du zip hoodie">
+      <div class="flip__sticky">
+        <div class="flip__stage">
+          <div class="flip__card">
+            <div class="flip__face"><img src="images/web/ironcold-zipup-hoodie.webp" alt="IRONCOLD Zip-Up Hoodie — face" loading="lazy" width="900" height="1296"></div>
+            <div class="flip__face flip__face--back"><img src="images/web/ironcold-zipup-hoodie-2.webp" alt="IRONCOLD Zip-Up Hoodie — dos" loading="lazy" width="900" height="1296"></div>
+          </div>
+        </div>
+        <div class="flip__copy">
+          <span class="eyebrow">360° — Les détails</span>
+          <h2>Construit pour<br>le <span class="ice-text">froid.</span></h2>
+          <p>Scrolle pour faire tourner le hoodie. Chaque détail est pensé pour durer — de la salle à la rue.</p>
+          <ul class="specs">
+            <li class="spec" style="--at:.06"><b>330</b><div><strong>GSM de molleton</strong><span>Épais, chaud et structuré.</span></div></li>
+            <li class="spec" style="--at:.24"><b>YKK</b><div><strong>Full-zip métal</strong><span>Fermeture solide, glisse fluide.</span></div></li>
+            <li class="spec" style="--at:.42"><b>IC</b><div><strong>Emblème IRONCOLD</strong><span>Sur la poitrine, finition premium.</span></div></li>
+            <li class="spec" style="--at:.6"><b>S–XXL</b><div><strong>Homme &amp; femme</strong><span>Coupe homme et coupe slim femme.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOTO DASHBOARD -->
+    <section class="sec dash">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <div><span class="eyebrow">Tableau de bord</span><h2>Full <span class="ice-text">throttle.</span></h2></div>
+          <p>Les chiffres qui comptent, au compteur.</p>
+        </div>
+        <div class="gauges">
+          <div class="gauge" data-reveal style="--v:0.86;--d:0ms">
+            <svg viewBox="0 0 200 165" aria-hidden="true">
+              <path class="gauge__track" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__ticks" d="M40.6 139.3A68 68 0 1 1 159.4 139.3" pathLength="100"/>
+              <path class="gauge__red" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__val" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <g class="gauge__needle"><path d="M100 105L97 100 100 38 103 100Z"/><circle cx="100" cy="105" r="8"/></g>
+            </svg>
+            <div class="gauge__read"><b>330</b><small>GSM</small></div>
+            <span class="gauge__label">Molleton épais</span>
+          </div>
+          <div class="gauge" data-reveal style="--v:0.92;--d:120ms">
+            <svg viewBox="0 0 200 165" aria-hidden="true">
+              <path class="gauge__track" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__ticks" d="M40.6 139.3A68 68 0 1 1 159.4 139.3" pathLength="100"/>
+              <path class="gauge__red" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__val" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <g class="gauge__needle"><path d="M100 105L97 100 100 38 103 100Z"/><circle cx="100" cy="105" r="8"/></g>
+            </svg>
+            <div class="gauge__read"><b>24H</b><small>–48H</small></div>
+            <span class="gauge__label">Livraison partout au Maroc</span>
+          </div>
+          <div class="gauge" data-reveal style="--v:0.7;--d:240ms">
+            <svg viewBox="0 0 200 165" aria-hidden="true">
+              <path class="gauge__track" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__ticks" d="M40.6 139.3A68 68 0 1 1 159.4 139.3" pathLength="100"/>
+              <path class="gauge__red" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__val" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <g class="gauge__needle"><path d="M100 105L97 100 100 38 103 100Z"/><circle cx="100" cy="105" r="8"/></g>
+            </svg>
+            <div class="gauge__read"><b>339</b><small>MAD</small></div>
+            <span class="gauge__label">Prix, livraison offerte</span>
+          </div>
+          <div class="gauge" data-reveal style="--v:0.55;--d:360ms">
+            <svg viewBox="0 0 200 165" aria-hidden="true">
+              <path class="gauge__track" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__ticks" d="M40.6 139.3A68 68 0 1 1 159.4 139.3" pathLength="100"/>
+              <path class="gauge__red" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <path class="gauge__val" d="M30.7 145A80 80 0 1 1 169.3 145" pathLength="100"/>
+              <g class="gauge__needle"><path d="M100 105L97 100 100 38 103 100Z"/><circle cx="100" cy="105" r="8"/></g>
+            </svg>
+            <div class="gauge__read"><b>7</b><small>JOURS</small></div>
+            <span class="gauge__label">Échange de taille</span>
+          </div>
+        </div>
+      </div>
+      <div class="checker" aria-hidden="true"></div>
+    </section>
+
+    <!-- SHOP BY GENDER -->
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <div>
+            <span class="eyebrow">Shop par coupe</span>
+            <h2>Pour lui. <span class="ice-text">Pour elle.</span></h2>
+          </div>
+        </div>
+        <div class="duo">
+          <div data-reveal>
+            <a class="gcard" href="products.html?g=homme" data-tilt="5">
+              <img src="images/web/ironcold-cold-zip-premium.webp" alt="Zip hoodies homme IRONCOLD" loading="lazy" width="900" height="1299">
+              <div class="gcard__txt"><h3>Homme</h3><span>Découvrir <i data-icon="arrow"></i></span></div>
+            </a>
+          </div>
+          <div data-reveal style="--d:120ms">
+            <a class="gcard" href="products.html?g=femme" data-tilt="5">
+              <img src="images/web/ironcold-femme-zip-1.webp" alt="Zip hoodies femme IRONCOLD" loading="lazy" width="900" height="1272">
+              <div class="gcard__txt"><h3>Femme</h3><span>Découvrir <i data-icon="arrow"></i></span></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST -->
+    <section class="wrap">
+      <div class="trust" data-reveal>
+        <div class="trust__item"><i data-icon="truck"></i><strong>Livraison gratuite</strong><span>24–48H partout au Maroc</span></div>
+        <div class="trust__item"><i data-icon="cash"></i><strong>Paiement à la livraison</strong><span>Tu paies quand tu reçois</span></div>
+        <div class="trust__item"><i data-icon="swap"></i><strong>Échange 7 jours</strong><span>Taille pas bonne ? On échange</span></div>
+        <div class="trust__item"><i data-icon="flake"></i><strong>Qualité premium</strong><span>Tissu Turquie, 330 GSM</span></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="sec">
+      <div class="wrap">
+        <div class="cta" data-reveal>
+          <img class="cta__emblem" src="images/web/emblem-white.png" alt="" width="347" height="512">
+          <h2>Commande.<br>Paie à la livraison.</h2>
+          <div>
+            <p>Pas de carte, pas de stress. Tu choisis ton zip hoodie, on te livre en 24–48H et tu paies à la réception.</p>
+            <div class="cta__btns">
+              <a class="btn btn--dark" href="products.html">Commander <i data-icon="arrow"></i></a>
+              <a class="btn btn--ghost" href="https://wa.me/212606685735?text=Salam%20IRONCOLD%2C%20bghit%20ncommander" target="_blank" rel="noopener"><i data-icon="wa"></i> WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>IC.bottom()</script>
+  <script>
+    IC.renderGrid(document.getElementById('featuredGrid'), IC_PRODUCTS);
+
+    // HERO — 3D photo stage: slideshow + mouse / gyro tilt + scroll depth
+    (function () {
+      const hero = document.getElementById('hero');
+      const cam = document.getElementById('heroCam');
+      const slides = Array.from(cam.querySelectorAll('.hero__slide'));
+      const dots = Array.from(document.querySelectorAll('#heroDots button'));
+      slides.forEach((s) => { s.querySelector('img').style.objectPosition = s.dataset.pos; });
+      let cur = 0, timer;
+      function show(i) {
+        slides[cur].classList.remove('is-on'); slides[cur].classList.add('is-out');
+        const out = slides[cur];
+        setTimeout(() => out.classList.remove('is-out'), 1600);
+        cur = (i + slides.length) % slides.length;
+        slides[cur].classList.add('is-on');
+        dots.forEach((d, k) => d.classList.toggle('is-on', k === cur));
+      }
+      const play = () => { clearInterval(timer); timer = setInterval(() => show(cur + 1), 5500); };
+      dots.forEach((d, k) => d.addEventListener('click', () => { if (k !== cur) show(k); play(); }));
+      play();
+      if (IC.reduceMotion) return;
+      let tx = 0, ty = 0, x = 0, y = 0;
+      window.addEventListener('pointermove', (e) => { tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; }, { passive: true });
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma == null) return;
+        tx = Math.max(-0.5, Math.min(0.5, e.gamma / 50)); ty = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 60));
+      }, { passive: true });
+      (function loop() {
+        x += (tx - x) * 0.06; y += (ty - y) * 0.06;
+        const sp = Math.min(1, window.scrollY / Math.max(1, hero.offsetHeight));
+        if (sp < 1) {
+          cam.style.transform = `translate3d(${(-x * 30).toFixed(2)}px, ${(sp * 120 - y * 20).toFixed(2)}px, ${(-sp * 260).toFixed(1)}px) rotateY(${(x * 7).toFixed(3)}deg) rotateX(${(-y * 5 + sp * 10).toFixed(3)}deg)`;
+        }
+        requestAnimationFrame(loop);
+      })();
+    })();
+    // If the 3D module can't load (offline CDN / old browser), show the static fallbacks.
+    setTimeout(function () {
+      if (!window.__ic3d) {
+        document.getElementById('hero').classList.add('no-webgl');
+        document.getElementById('explore').classList.add('no-webgl');
+      }
+    }, 6000);
+  </script>
+  <script type="module">
+    import { initHero, initCarousel } from './js/scene3d.js';
+    window.__ic3d = true;
+    initHero(document.getElementById('heroCanvas'), { emblem: false });
+
+    const items = [];
+    IC_PRODUCTS.forEach((p) => p.images.forEach((im, k) => items.push({ p, src: IC.img(im), view: k ? 'Vue dos' : 'Vue face' })));
+    const nameEl = document.getElementById('c3dName');
+    const priceEl = document.getElementById('c3dPrice');
+    const linkEl = document.getElementById('c3dLink');
+    const car = initCarousel(document.getElementById('c3dCanvas'), {
+      items,
+      onFront(it) {
+        nameEl.textContent = it.p.name;
+        priceEl.textContent = `${IC.money(it.p.price)} · ${it.p.color} · ${it.view}`;
+        linkEl.href = `product.html?id=${it.p.id}`;
+      },
+      onOpen(it) { location.href = `product.html?id=${it.p.id}`; }
+    });
+    if (car) {
+      document.getElementById('c3dPrev').addEventListener('click', car.prev);
+      document.getElementById('c3dNext').addEventListener('click', car.next);
+    }
+  </script>
+</body>
+</html>

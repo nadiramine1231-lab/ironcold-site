@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zip Hoodie | IRONCOLD</title>
+  <meta name="description" content="Zip hoodie IRONCOLD, molleton 330 GSM. Livraison gratuite au Maroc, paiement à la livraison.">
+  <meta name="theme-color" content="#07080a">
+  <link rel="icon" type="image/png" href="favicon_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ironcold.css">
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Unknown / removed product (old T-shirt or oversize links) -> collection
+    if (!IC.byId(IC.param('id'))) location.replace('products.html');
+  </script>
+</head>
+<body>
+  <script>IC.top({ page: 'shop' })</script>
+
+  <main class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane" style="padding-top:20px"><a href="index.html">Accueil</a><span>/</span><a href="products.html">Zip Hoodies</a><span>/</span><span id="crumbName"></span></nav>
+    <div class="pdp" id="pdp"></div>
+
+    <section class="sec" style="padding-bottom:0">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow">Complète ta collection</span><h2>Tu vas <span class="ice-text">aimer</span></h2></div>
+        <a class="link-arrow" href="products.html">Voir tout <i data-icon="arrow"></i></a>
+      </div>
+      <div class="grid grid--3" id="related"></div>
+    </section>
+  </main>
+
+  <div class="sticky-buy" id="stickyBuy" aria-hidden="true"></div>
+
+  <script>IC.bottom()</script>
+  <script>
+    (function () {
+      const p = IC.byId(IC.param('id'));
+      if (!p) return;
+      const I = IC.icon;
+      const g = p.gender === 'homme' ? 'Homme' : 'Femme';
+      let size = p.sizes[1] || p.sizes[0];
+      let qty = 1;
+      let slide = 0;
+      document.title = `${p.name} — ${p.color} | IRONCOLD`;
+      document.getElementById('crumbName').textContent = p.name;
+
+      const siblings = IC_PRODUCTS.filter((x) => x.gender === p.gender);
+      const imgs = p.images;
+
+      document.getElementById('pdp').innerHTML = `
+        <div class="gal">
+          <div class="gal__thumbs">${imgs.map((im, i) => `<button class="gal__thumb${i ? '' : ' is-on'}" type="button" data-slide="${i}" aria-label="Photo ${i + 1}"><img src="${IC.img(im, true)}" alt="" width="480" height="690"></button>`).join('')}</div>
+          <div class="gal__main" id="galMain">
+            ${p.badge ? `<span class="pcard__badge gal__badge${p.badge === 'Bestseller' ? ' is-hot' : ''}">${p.badge}</span>` : ''}
+            <div class="gal__track" id="galTrack">${imgs.map((im, i) => `<div class="gal__slide"><img src="${IC.img(im)}" alt="${IC.esc(p.name)} — ${i ? 'dos' : 'face'}" width="900" height="1296" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}</div>
+            ${imgs.length > 1 ? `<button class="icon-btn gal__nav gal__nav--prev" type="button" data-step="-1" aria-label="Photo précédente">${I.arrow}</button><button class="icon-btn gal__nav gal__nav--next" type="button" data-step="1" aria-label="Photo suivante">${I.arrow}</button><div class="gal__dots">${imgs.map((_, i) => `<i class="${i ? '' : 'is-on'}"></i>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        <div class="info">
+          <span class="eyebrow">${I.flake} IRONCOLD · ${g}</span>
+          <h1>${IC.esc(p.name)}</h1>
+          <div class="info__price">${IC.money(p.price)} <small>Livraison gratuite · Paiement à la livraison</small></div>
+          <p class="info__desc">${IC.esc(p.desc)}</p>
+          <div>
+            <div class="opt__label"><span>Couleur : <b>${p.color}</b></span></div>
+            <div class="colors">${siblings.map((s) => `<a class="color${s.id === p.id ? ' is-on' : ''}" href="product.html?id=${s.id}" aria-label="${s.color}"><i class="swatch swatch--${s.color === 'Noir' ? 'noir' : 'gris'}"></i>${s.color}</a>`).join('')}</div>
+          </div>
+          <div>
+            <div class="opt__label"><span>Taille : <b id="sizeLabel">${size}</b></span><a href="https://wa.me/212606685735?text=${encodeURIComponent(`Salam IRONCOLD, chno taille li mnasba lia f ${p.name} ?`)}" target="_blank" rel="noopener">Aide pour la taille ?</a></div>
+            <div class="sizes" id="sizes">${p.sizes.map((s) => `<button class="size${s === size ? ' is-on' : ''}" type="button" data-size="${s}">${s}</button>`).join('')}</div>
+          </div>
+          <div class="buy">
+            <div class="qty"><button type="button" data-q="-1" aria-label="Diminuer">−</button><span id="qtyVal">1</span><button type="button" data-q="1" aria-label="Augmenter">+</button></div>
+            <button class="btn btn--light" type="button" id="addBtn">Ajouter au panier</button>
+            <button class="btn btn--ice btn--block btn--shine" type="button" id="buyNow">Acheter maintenant — paiement à la livraison</button>
+            <button class="btn btn--ghost btn--block" type="button" id="waBtn">${I.wa} Commander via WhatsApp</button>
+          </div>
+          <div class="assure">
+            <div>${I.truck}<span><strong>Livraison gratuite</strong>24–48H partout au Maroc</span></div>
+            <div>${I.cash}<span><strong>Paiement à la livraison</strong>Tu paies à la réception</span></div>
+            <div>${I.swap}<span><strong>Échange 7 jours</strong>Taille pas bonne ? On échange</span></div>
+            <div>${I.flake}<span><strong>Qualité premium</strong>Molleton 330 GSM</span></div>
+          </div>
+          <div class="acc">
+            <details open><summary>Description</summary><div class="acc__body"><p>${IC.esc(p.desc)}</p><p>Couleur : ${p.color} · Coupe ${g.toLowerCase()} · Tailles ${p.sizes.join(', ')}.</p></div></details>
+            <details><summary>Livraison &amp; paiement</summary><div class="acc__body"><p>Livraison gratuite partout au Maroc en 24 à 48H.</p><p>Paiement à la livraison : tu paies en cash à la réception de ta commande. Notre équipe t'appelle avant pour confirmer.</p></div></details>
+            <details><summary>Retours &amp; échanges</summary><div class="acc__body"><p>7 jours pour retourner ou échanger à partir de la livraison. Article non porté, dans son emballage d'origine.</p><p>Échange gratuit si la taille ne va pas — contacte-nous sur WhatsApp.</p></div></details>
+          </div>
+        </div>`;
+
+      // gallery
+      const track = document.getElementById('galTrack');
+      const main = document.getElementById('galMain');
+      function show(i) {
+        slide = (i + imgs.length) % imgs.length;
+        track.style.transform = `translateX(${-slide * 100}%)`;
+        document.querySelectorAll('.gal__thumb').forEach((t, k) => t.classList.toggle('is-on', k === slide));
+        document.querySelectorAll('.gal__dots i').forEach((t, k) => t.classList.toggle('is-on', k === slide));
+      }
+      document.querySelectorAll('[data-slide]').forEach((b) => b.addEventListener('click', () => show(+b.dataset.slide)));
+      document.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => show(slide + (+b.dataset.step))));
+      let sx = null;
+      main.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+      main.addEventListener('touchend', (e) => {
+        if (sx === null) return;
+        const dx = e.changedTouches[0].clientX - sx;
+        if (Math.abs(dx) > 40) show(slide + (dx < 0 ? 1 : -1));
+        sx = null;
+      });
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        main.addEventListener('pointermove', (e) => {
+          if (e.target.closest('button')) { main.classList.remove('is-zoom'); return; }
+          const r = main.getBoundingClientRect();
+          main.style.setProperty('--zx', ((e.clientX - r.left) / r.width * 100) + '%');
+          main.style.setProperty('--zy', ((e.clientY - r.top) / r.height * 100) + '%');
+          main.classList.add('is-zoom');
+        });
+        main.addEventListener('pointerleave', () => main.classList.remove('is-zoom'));
+      }
+
+      // options
+      document.getElementById('sizes').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-size]'); if (!b) return;
+        size = b.dataset.size;
+        document.querySelectorAll('#sizes .size').forEach((x) => x.classList.toggle('is-on', x === b));
+        document.getElementById('sizeLabel').textContent = size;
+        renderSticky();
+      });
+      document.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => {
+        qty = Math.max(1, Math.min(10, qty + (+b.dataset.q)));
+        document.getElementById('qtyVal').textContent = qty;
+      }));
+      document.getElementById('addBtn').addEventListener('click', () => IC.add(p.id, size, qty));
+      document.getElementById('buyNow').addEventListener('click', () => IC.checkout([{ id: p.id, size, qty }]));
+      document.getElementById('waBtn').addEventListener('click', () => IC.waOrder([{ id: p.id, size, qty }]));
+
+      // sticky mobile buy bar
+      const sticky = document.getElementById('stickyBuy');
+      function renderSticky() {
+        sticky.innerHTML = `<img src="${IC.img(p.images[0], true)}" alt="" width="480" height="690"><div><strong>${IC.esc(p.name)}</strong>${IC.money(p.price)} · Taille ${size}</div><button class="btn btn--ice" type="button" id="stickyAdd">Ajouter</button>`;
+        document.getElementById('stickyAdd').addEventListener('click', () => IC.add(p.id, size, qty));
+      }
+      renderSticky();
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((es) => {
+          const off = !es[0].isIntersecting && es[0].boundingClientRect.top < 0;
+          sticky.classList.toggle('is-show', off);
+          sticky.setAttribute('aria-hidden', off ? 'false' : 'true');
+        }).observe(document.querySelector('.buy'));
+      }
+
+      IC.renderGrid(document.getElementById('related'), IC_PRODUCTS.filter((x) => x.id !== p.id).slice(0, 4));
+    })();
+  </script>
+</body>
+</html>

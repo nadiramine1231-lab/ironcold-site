@@ -1,0 +1,8 @@
+{
+  "name": "ironcold-site",
+  "private": true,
+  "description": "IRONCOLD — boutique zip hoodies + API commandes pour l'app IRON COLD Commandes (Netlify)",
+  "scripts": { "build": "node scripts/build.mjs" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "@netlify/blobs": "^11.1.8" }
+}

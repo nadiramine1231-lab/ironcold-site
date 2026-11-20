@@ -1,0 +1,26 @@
+# Only the site source goes to git / Netlify. Everything else in this folder stays local.
+/*
+!/.gitignore
+!/netlify.toml
+!/package.json
+!/scripts/
+!/netlify/
+!/css/
+!/js/
+!/images/
+/images/*
+!/images/web/
+!/index.html
+!/products.html
+!/product.html
+!/contact.html
+!/livraison.html
+!/tshirts.html
+!/hoodies.html
+!/hoodies-oversize.html
+!/zip-hoodies.html
+!/favicon_icon.png
+!/logo1_nobg.png
+!/23_log.png
+.netlify/
+dist/

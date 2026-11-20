@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zip Hoodies — Collection | IRONCOLD</title>
+  <meta name="description" content="Tous les zip hoodies IRONCOLD homme & femme. Molleton 330 GSM, zip YKK. Livraison gratuite au Maroc, paiement à la livraison.">
+  <meta name="theme-color" content="#07080a">
+  <link rel="icon" type="image/png" href="favicon_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ironcold.css">
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</head>
+<body>
+  <script>IC.top({ page: ({ homme: 'homme', femme: 'femme' })[IC.param('g')] || 'shop' })</script>
+
+  <main>
+    <section class="pbanner">
+      <div class="pbanner__bg" data-marquee data-speed="24" data-dir="-1" aria-hidden="true">
+        <div class="mq__track"><div class="mq__group"><span>ZIP HOODIES</span><span>IRONCOLD</span></div></div>
+      </div>
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Collection</span></nav>
+        <h1 id="pageTitle">Zip <span class="ice-text">Hoodies</span></h1>
+        <p>Molleton 330 GSM, full-zip, emblème IC. Homme &amp; femme — livraison gratuite partout au Maroc, paiement à la livraison.</p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="toolbar">
+        <div class="chips" id="gChips" role="group" aria-label="Filtrer par coupe">
+          <button class="chip is-on" type="button" data-g="all">Tous</button>
+          <button class="chip" type="button" data-g="homme">Homme</button>
+          <button class="chip" type="button" data-g="femme">Femme</button>
+        </div>
+        <div class="toolbar__right">
+          <div class="chips" id="cChips" role="group" aria-label="Filtrer par couleur">
+            <button class="chip is-on" type="button" data-c="all">Toutes</button>
+            <button class="chip" type="button" data-c="Noir"><i class="swatch swatch--noir"></i>Noir</button>
+            <button class="chip" type="button" data-c="Gris chiné"><i class="swatch swatch--gris"></i>Gris</button>
+          </div>
+          <span id="count" aria-live="polite"></span>
+          <select class="select" id="sort" aria-label="Trier">
+            <option value="featured">En vedette</option>
+            <option value="new">Nouveautés</option>
+            <option value="az">Nom A → Z</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Aucun produit ne correspond à ce filtre.</p>
+    </section>
+
+    <section class="wrap" style="margin-top:clamp(60px,8vw,110px)">
+      <div class="trust" data-reveal>
+        <div class="trust__item"><i data-icon="truck"></i><strong>Livraison gratuite</strong><span>24–48H partout au Maroc</span></div>
+        <div class="trust__item"><i data-icon="cash"></i><strong>Paiement à la livraison</strong><span>Tu paies quand tu reçois</span></div>
+        <div class="trust__item"><i data-icon="swap"></i><strong>Échange 7 jours</strong><span>Taille pas bonne ? On échange</span></div>
+        <div class="trust__item"><i data-icon="flake"></i><strong>Qualité premium</strong><span>Tissu Turquie, 330 GSM</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script>IC.bottom()</script>
+  <script>
+    (function () {
+      const state = { g: IC.param('g') || 'all', c: 'all', sort: 'featured' };
+      if (!['all', 'homme', 'femme'].includes(state.g)) state.g = 'all';
+      const grid = document.getElementById('grid');
+      const titles = { all: 'Zip <span class="ice-text">Hoodies</span>', homme: 'Zip hoodies <span class="ice-text">Homme</span>', femme: 'Zip hoodies <span class="ice-text">Femme</span>' };
+
+      function render() {
+        let list = IC_PRODUCTS.filter((p) => (state.g === 'all' || p.gender === state.g) && (state.c === 'all' || p.color === state.c));
+        if (state.sort === 'az') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+        if (state.sort === 'new') list = list.slice().sort((a, b) => (b.badge === 'New') - (a.badge === 'New'));
+        IC.renderGrid(grid, list);
+        document.getElementById('empty').hidden = list.length > 0;
+        document.getElementById('count').textContent = `${list.length} produit${list.length > 1 ? 's' : ''}`;
+        document.getElementById('pageTitle').innerHTML = titles[state.g];
+        document.querySelectorAll('#gChips .chip').forEach((b) => b.classList.toggle('is-on', b.dataset.g === state.g));
+        document.querySelectorAll('#cChips .chip').forEach((b) => b.classList.toggle('is-on', b.dataset.c === state.c));
+      }
+      document.getElementById('gChips').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-g]'); if (!b) return;
+        state.g = b.dataset.g;
+        const url = new URL(location.href);
+        if (state.g === 'all') url.searchParams.delete('g'); else url.searchParams.set('g', state.g);
+        history.replaceState(null, '', url);
+        render();
+      });
+      document.getElementById('cChips').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-c]'); if (!b) return;
+        state.c = b.dataset.c; render();
+      });
+      document.getElementById('sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+      render();
+    })();
+  </script>
+</body>
+</html>

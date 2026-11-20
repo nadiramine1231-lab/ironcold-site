@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contact | IRONCOLD</title>
+  <meta name="description" content="Contacte IRONCOLD sur WhatsApp, par email ou sur Instagram. On répond vite.">
+  <meta name="theme-color" content="#07080a">
+  <link rel="icon" type="image/png" href="favicon_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ironcold.css">
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</head>
+<body>
+  <script>IC.top({ page: 'contact' })</script>
+
+  <main>
+    <section class="pbanner">
+      <div class="pbanner__bg" data-marquee data-speed="24" data-dir="-1" aria-hidden="true">
+        <div class="mq__track"><div class="mq__group"><span>CONTACT</span><span>IRONCOLD</span></div></div>
+      </div>
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Contact</span></nav>
+        <h1>Let's <span class="ice-text">talk.</span></h1>
+        <p>Commande, taille, collab ? L'équipe IRONCOLD répond vite — WhatsApp 24/7.</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap split">
+        <div data-reveal>
+          <span class="eyebrow">Nous joindre</span>
+          <div class="channels">
+            <a class="channel" href="https://wa.me/212606685735" target="_blank" rel="noopener">
+              <span class="channel__ic"><i data-icon="wa"></i></span>
+              <span><strong>WhatsApp</strong><span>+212 6 06 68 57 35 — réponse la plus rapide, 24/7</span></span>
+              <i data-icon="arrow"></i>
+            </a>
+            <a class="channel" href="mailto:contact@ironcold.ma">
+              <span class="channel__ic"><i data-icon="mail"></i></span>
+              <span><strong>Email</strong><span>contact@ironcold.ma — réponse sous 24H</span></span>
+              <i data-icon="arrow"></i>
+            </a>
+            <a class="channel" href="https://www.instagram.com/ironcold_officiel/" target="_blank" rel="noopener">
+              <span class="channel__ic"><i data-icon="ig"></i></span>
+              <span><strong>Instagram</strong><span>@ironcold_officiel — DMs ouverts pour les collabs</span></span>
+              <i data-icon="arrow"></i>
+            </a>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <span class="eyebrow">Horaires</span>
+            <p style="margin:10px 0 0;color:var(--text)">Tous les jours — 24 / 7</p>
+          </div>
+        </div>
+
+        <div class="panel" data-reveal style="--d:120ms">
+          <div id="contactBox">
+            <h3>Envoie un message</h3>
+            <p>On te répond sur WhatsApp ou par email.</p>
+            <form class="co__form" id="contactForm" novalidate>
+              <div class="field-row">
+                <label class="field"><span>Prénom</span><input name="prenom" autocomplete="given-name" required></label>
+                <label class="field"><span>Nom</span><input name="nom" autocomplete="family-name" required></label>
+              </div>
+              <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
+              <label class="field"><span>Téléphone (WhatsApp)</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 XX XX XX XX"></label>
+              <label class="field"><span>Sujet</span>
+                <select name="sujet">
+                  <option value="">Choisir un sujet</option>
+                  <option>Question sur une commande</option>
+                  <option>Aide pour la taille</option>
+                  <option>Retour / échange</option>
+                  <option>Collab / partenariat</option>
+                  <option>Autre</option>
+                </select>
+              </label>
+              <label class="field"><span>Message</span><textarea name="message" rows="5" placeholder="Dis-nous ce dont tu as besoin…" required></textarea></label>
+              <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <p class="co__err" id="contactErr" role="alert"></p>
+              <button type="submit" class="btn btn--ice btn--block">Envoyer le message <i data-icon="arrow"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:0">
+      <div class="wrap">
+        <div class="cta" data-reveal>
+          <img class="cta__emblem" src="images/web/emblem-white.png" alt="" width="347" height="512">
+          <h2>Commande direct<br>sur WhatsApp.</h2>
+          <div>
+            <p>Choisis ton zip hoodie, envoie ta taille et ton adresse — on s'occupe du reste. Paiement à la livraison.</p>
+            <div class="cta__btns">
+              <a class="btn btn--dark" href="https://wa.me/212606685735?text=Salam%20IRONCOLD%2C%20bghit%20ncommander" target="_blank" rel="noopener"><i data-icon="wa"></i> Commander sur WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>IC.bottom()</script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(this).entries());
+      const err = document.getElementById('contactErr');
+      if (!d.prenom.trim() || !d.nom.trim() || !d.message.trim() || !/^\S+@\S+\.\S+$/.test(d.email)) {
+        err.textContent = 'Merci de remplir ton prénom, nom, un email valide et ton message.';
+        return;
+      }
+      err.textContent = '';
+      const btn = this.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      const done = () => {
+        document.getElementById('contactBox').innerHTML = `<div class="form-ok"><img src="images/web/emblem-white.png" alt="" width="347" height="512"><h3>Message envoyé !</h3><p>On te répond très vite. Garde un œil sur ton WhatsApp.</p></div>`;
+      };
+      const fail = () => {
+        btn.disabled = false; btn.textContent = 'Envoyer le message';
+        const wa = `https://wa.me/212606685735?text=${encodeURIComponent(`Salam IRONCOLD, ana ${d.prenom} ${d.nom} (${d.email}).
+${d.message}`)}`;
+        err.innerHTML = `Oups, le message n'a pas pu être envoyé. <a class="co__wa" href="${wa}" target="_blank" rel="noopener">${IC.icon.wa} Envoyer sur WhatsApp</a>`;
+      };
+      fetch('/api/notify', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({ type: 'contact' }, d))
+      }).then((r) => (r.ok ? done() : fail()), fail);
+    });
+  </script>
+</body>
+</html>
