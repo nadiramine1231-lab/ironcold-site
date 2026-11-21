@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const INCLUDE = [
-  'index.html', 'products.html', 'product.html', 'contact.html', 'livraison.html',
+  'index.html', 'products.html', 'product.html', 'contact.html', 'livraison.html', 'confirm.html',
   'favicon_icon.png', 'logo1_nobg.png',
   'css', 'js', 'images/web'
 ];

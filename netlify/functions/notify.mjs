@@ -2,6 +2,7 @@
    Orders are saved (Netlify Blobs) for the app "IRON COLD Commandes", which gets a push notification
    with the order sound. (No Telegram any more.)
    Prices always come from js/products.js, never from the browser. */
+import crypto from "node:crypto";
 import "../../js/products.js";
 import { store } from "../lib/store.mjs";
 import { fcmAll } from "../lib/fcm.mjs";
@@ -30,7 +31,8 @@ async function handleOrder(d) {
   const order = {
     id, createdAt: now.toISOString(), status: "new",
     name: `${prenom} ${nom}`, prenom, nom, phone, city, address,
-    items, qty, pack: { fr: `${qty} article${qty > 1 ? "s" : ""}` }, total, lang: "fr"
+    items, qty, pack: { fr: `${qty} article${qty > 1 ? "s" : ""}` }, total, lang: "fr",
+    confirmToken: crypto.randomBytes(12).toString("hex")   // customer self-confirmation link
   };
   await store("orders").setJSON(id, order);
 
@@ -39,7 +41,8 @@ async function handleOrder(d) {
   // The order is saved even if a notification fails.
   await fcmAll({ title: `🛍️ Nouvelle commande · ${total} MAD`, body: `${order.name} · ${city}\n${lines.join(", ")}`, data: { type: "new_order", ref: id } })
     .catch((e) => console.error("push error", e));
-  return json({ ok: true, id, total });
+  const ref = id.slice(-6).toUpperCase();
+  return json({ ok: true, id, ref, total, confirmUrl: `/confirm.html?o=${id}&k=${order.confirmToken}` });
 }
 
 async function handleContact(d) {

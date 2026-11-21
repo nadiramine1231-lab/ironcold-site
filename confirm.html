@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Confirmer ma commande | IRONCOLD</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#07080a">
+  <link rel="icon" type="image/png" href="favicon_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ironcold.css">
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <style>
+    .cf { min-height: 70svh; display: grid; place-items: center; padding: clamp(32px, 6vw, 80px) 0; }
+    .cf__card { width: min(560px, 100%); padding: clamp(24px, 4vw, 40px); border-radius: 22px; border: 1px solid var(--line);
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88, 185, 255, .12), transparent 70%), var(--bg-2); box-shadow: 0 50px 120px -40px rgba(0, 0, 0, .9); }
+    .cf__card h1 { font-family: var(--display); font-size: clamp(44px, 9vw, 72px); line-height: .9; margin: 10px 0 8px; }
+    .cf__ref { color: var(--muted); font-size: 14px; }
+    .cf__items { margin: 22px 0 16px; border-top: 1px solid var(--line); }
+    .cf__item { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .cf__item img { width: 54px; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; background: var(--photo); }
+    .cf__item em { display: block; font-style: normal; color: var(--muted); font-size: 12px; }
+    .cf__row { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); padding: 4px 0; }
+    .cf__row strong { color: var(--ice); font-size: 22px; }
+    .cf__actions { display: grid; gap: 10px; margin-top: 22px; }
+    .cf__cancel { justify-self: center; font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; padding: 8px; }
+    .cf__cancel:hover { color: var(--hot); }
+    .cf__sure { display: none; gap: 8px; justify-content: center; align-items: center; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+    .cf__sure.is-on { display: flex; }
+    .cf__sure button { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-2); font-weight: 700; }
+    .cf__sure .yes { border-color: var(--hot); color: var(--hot); }
+    .cf__state { text-align: center; display: grid; gap: 12px; justify-items: center; }
+    .cf__badge { width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center; font-size: 40px; animation: pop .8s var(--ease); }
+    .cf__badge--ok { background: radial-gradient(circle, rgba(166, 220, 255, .3), transparent 70%); }
+    .cf__badge--ko { background: radial-gradient(circle, rgba(255, 77, 77, .25), transparent 70%); }
+    .cf__state p { color: var(--muted); max-width: 400px; }
+    .cf__err { color: var(--hot); font-size: 13px; text-align: center; min-height: 1em; }
+  </style>
+</head>
+<body>
+  <script>IC.top({ page: '' })</script>
+
+  <main class="wrap cf">
+    <div class="cf__card" id="cf" aria-live="polite">
+      <p class="cf__ref">Chargement de ta commande…</p>
+    </div>
+  </main>
+
+  <script>IC.bottom()</script>
+  <script>
+    (function () {
+      const box = document.getElementById('cf');
+      const q = new URLSearchParams(location.search);
+      const o = q.get('o'), k = q.get('k');
+      const I = IC.icon;
+      const wa = (txt) => `https://wa.me/212606685735?text=${encodeURIComponent(txt)}`;
+
+      function itemsHTML(order) {
+        return order.items.map((i) => {
+          const p = IC_PRODUCTS.find((x) => x.name === i.name && x.color === i.color);
+          const img = p ? `<img src="${IC.img(p.images[0], true)}" alt="" width="480" height="690">` : '<span></span>';
+          return `<div class="cf__item">${img}<span><strong>${IC.esc(i.name)}</strong><em>${IC.esc(i.color)} · Taille ${IC.esc(i.size)} · ×${i.qty}</em></span><b>${IC.money(i.price * i.qty)}</b></div>`;
+        }).join('');
+      }
+
+      function state(kind, title, text, order) {
+        const extra = order ? `<p>N° <strong>${order.ref}</strong> · ${IC.money(order.total)} · paiement à la livraison</p>` : '';
+        box.innerHTML = `<div class="cf__state">
+          <div class="cf__badge cf__badge--${kind === 'ko' ? 'ko' : 'ok'}">${kind === 'ko' ? '✕' : '✓'}</div>
+          <h1>${title}</h1><p>${text}</p>${extra}
+          <a class="btn btn--ghost" href="index.html">Retour à la boutique</a></div>`;
+      }
+
+      function show(order) {
+        if (order.status === 'confirmed') return state('ok', 'Commande confirmée', `Merci ${IC.esc(order.prenom)} ! On prépare ton colis. Livraison 24–48H, tu paies à la réception.`, order);
+        if (order.status === 'cancelled') return state('ko', 'Commande annulée', 'Ta commande est annulée. Tu peux repasser commande quand tu veux.', order);
+        if (order.status === 'shipped') return state('ok', 'Commande expédiée', 'Ton colis est en route ! Garde ton téléphone allumé pour le livreur.', order);
+        if (order.status === 'delivered') return state('ok', 'Commande livrée', 'Merci pour ta confiance — stay cold.', order);
+        box.innerHTML = `
+          <span class="eyebrow">${I.cash} Paiement à la livraison</span>
+          <h1>Confirme ta commande</h1>
+          <p class="cf__ref">Bonjour ${IC.esc(order.prenom)} — commande N° <strong>${order.ref}</strong> · livraison à ${IC.esc(order.city)}</p>
+          <div class="cf__items">${itemsHTML(order)}</div>
+          <div class="cf__row"><span>Livraison</span><span>Gratuite</span></div>
+          <div class="cf__row"><span>Total à payer à la livraison</span><strong>${IC.money(order.total)}</strong></div>
+          <div class="cf__actions">
+            <button class="btn btn--ice btn--block btn--shine" type="button" id="cfYes">✓ Je confirme ma commande</button>
+            <a class="btn btn--ghost btn--block" href="${wa(`Salam IRONCOLD, j'ai une question sur ma commande N° ${order.ref}`)}" target="_blank" rel="noopener">${I.wa} Une question ? WhatsApp</a>
+            <p class="cf__err" id="cfErr"></p>
+            <button class="cf__cancel" type="button" id="cfNo">Annuler ma commande</button>
+            <div class="cf__sure" id="cfSure"><span>Tu es sûr(e) ?</span><button type="button" class="yes" id="cfNoYes">Oui, annuler</button><button type="button" id="cfNoNo">Non</button></div>
+          </div>`;
+        document.getElementById('cfYes').addEventListener('click', (e) => act('confirm', e.currentTarget));
+        document.getElementById('cfNo').addEventListener('click', () => document.getElementById('cfSure').classList.add('is-on'));
+        document.getElementById('cfNoNo').addEventListener('click', () => document.getElementById('cfSure').classList.remove('is-on'));
+        document.getElementById('cfNoYes').addEventListener('click', (e) => act('cancel', e.currentTarget));
+      }
+
+      function act(action, btn) {
+        btn.disabled = true;
+        const label = btn.textContent; btn.textContent = 'Envoi…';
+        fetch('/api/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ o, k, action }) })
+          .then((r) => r.json().then((d) => ({ r, d })))
+          .then(({ r, d }) => { if (!r.ok || !d.ok) throw new Error(); show(d.order); })
+          .catch(() => {
+            btn.disabled = false; btn.textContent = label;
+            document.getElementById('cfErr').innerHTML = `Oups, réessaie dans un instant — ou <a href="${wa(`Salam IRONCOLD, ${action === 'confirm' ? 'je confirme' : "j'annule"} ma commande`)}" target="_blank" rel="noopener" style="text-decoration:underline">écris-nous sur WhatsApp</a>.`;
+          });
+      }
+
+      if (!o || !k) return state('ko', 'Lien invalide', 'Ce lien de confirmation est incomplet. Écris-nous sur WhatsApp et on s\'occupe de ta commande.');
+      fetch(`/api/confirm?o=${encodeURIComponent(o)}&k=${encodeURIComponent(k)}`)
+        .then((r) => r.json().then((d) => ({ r, d })))
+        .then(({ r, d }) => { if (!r.ok || !d.ok) throw new Error(); show(d.order); })
+        .catch(() => state('ko', 'Commande introuvable', 'Ce lien ne correspond à aucune commande. Écris-nous sur WhatsApp : +212 6 06 68 57 35.'));
+    })();
+  </script>
+</body>
+</html>

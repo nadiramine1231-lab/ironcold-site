@@ -324,27 +324,29 @@
       document.getElementById('icCoWa').addEventListener('click', () => IC.waOrder(coItems, who));
     };
 
-    const done = () => {
+    const done = (res) => {
+      res = res || {};
       if (coFromCart) { cart = []; saveCart(); renderCart(); }
       document.getElementById('icCoBody').innerHTML = `
         <div class="co__ok">
           <div class="co__okIcon"><img src="images/web/emblem-white.png" alt="" width="347" height="512"></div>
           <h3 class="co__title" id="icCoTitle">Merci ${IC.esc(d.prenom)} !</h3>
-          <p>Ta commande est bien reçue. Notre équipe t'appelle dans les <strong>24H</strong> pour confirmer la livraison.</p>
+          <p>Ta commande${res.ref ? ` N° <strong>${IC.esc(res.ref)}</strong>` : ''} est bien reçue.${res.confirmUrl ? ' <strong>Dernière étape : confirme-la</strong> pour qu’on la prépare tout de suite.' : ' Notre équipe t’appelle dans les <strong>24H</strong> pour confirmer la livraison.'}</p>
           <div class="co__okBox">
             <span>${coItems.map((i) => `${IC.esc(IC.byId(i.id).name)} (${i.size}) ×${i.qty}`).join('<br>')}</span>
             <span>📍 ${IC.esc(d.ville)}, ${IC.esc(d.adresse)}</span>
             <span>📞 ${IC.esc(phone)}</span>
             <strong>Total à payer à la livraison : ${total}</strong>
           </div>
-          <button class="btn btn--ice btn--block" type="button" data-close>Continuer</button>
+          ${res.confirmUrl ? `<a class="btn btn--ice btn--block btn--shine" href="${IC.esc(res.confirmUrl)}">✓ Confirmer ma commande</a>
+          <button class="btn btn--ghost btn--block" type="button" data-close>Plus tard</button>` : '<button class="btn btn--ice btn--block" type="button" data-close>Continuer</button>'}
         </div>`;
     };
     fetch(NOTIFY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Object.assign({ type: 'order', website: d.website || '', items: coItems }, who))
-    }).then((r) => (r.ok ? done() : fail()), fail);
+    }).then((r) => (r.ok ? r.json().catch(() => ({})).then(done) : fail()), fail);
   }
 
   // ---------- toast ----------
