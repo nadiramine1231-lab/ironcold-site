@@ -17,6 +17,8 @@
   IC.byId = (id) => PRODUCTS.find((p) => p.id === id);
   IC.img = (name, small) => `images/web/${name}${small ? '-sm' : ''}.webp`;
   IC.money = (n) => `${n} MAD`;
+  IC.colorSlug = (c) => ({ Noir: 'noir', Blanc: 'blanc' })[c] || 'gris';
+  IC.cat = (id) => (window.IC_CATEGORIES || []).find((c) => c.id === id) || { id, label: '', short: '' };
   IC.esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   IC.param = (k) => new URLSearchParams(location.search).get(k);
 
@@ -40,7 +42,7 @@
   // ---------- shell markup ----------
   const ANN = ['Livraison gratuite partout au Maroc', 'Paiement à la livraison', 'Nouveau drop — Zip Hoodies', 'Échange de taille 7 jours'];
   const NAV = [
-    { key: 'shop', href: 'products.html', label: 'Zip Hoodies' },
+    { key: 'shop', href: 'products.html', label: 'Collection' },
     { key: 'homme', href: 'products.html?g=homme', label: 'Homme' },
     { key: 'femme', href: 'products.html?g=femme', label: 'Femme' },
     { key: 'livraison', href: 'livraison.html', label: 'Livraison' },
@@ -105,7 +107,10 @@
           </div>
         </div>
         <div class="ftr__col"><h5>Shop</h5><ul>
-          <li><a href="products.html">Tous les zip hoodies</a></li>
+          <li><a href="products.html">Toute la collection</a></li>
+          <li><a href="products.html?cat=zip">Zip Hoodies</a></li>
+          <li><a href="products.html?cat=oversize">Hoodies Oversize</a></li>
+          <li><a href="products.html?cat=tshirt">T-Shirts</a></li>
           <li><a href="products.html?g=homme">Homme</a></li>
           <li><a href="products.html?g=femme">Femme</a></li></ul></div>
         <div class="ftr__col"><h5>Aide</h5><ul>
@@ -378,7 +383,7 @@
       </div>
       <div class="pcard__info">
         <a href="product.html?id=${p.id}" class="pcard__name">${IC.esc(p.name)}</a>
-        <span class="pcard__meta"><i class="swatch swatch--${p.color === 'Noir' ? 'noir' : 'gris'}"></i>${p.color} · ${g}</span>
+        <span class="pcard__meta"><i class="swatch swatch--${IC.colorSlug(p.color)}"></i>${IC.cat(p.cat).short} · ${p.color} · ${g}</span>
         <span class="pcard__price">${IC.money(p.price)}</span>
       </div>
     </article>`;

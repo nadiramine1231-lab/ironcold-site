@@ -41,7 +41,7 @@
           <span class="line"><span>Zip up.</span></span>
           <span class="line"><span><em class="ice-text" style="font-style:normal">Stay cold.</em></span></span>
         </h1>
-        <p class="hero__sub">Zip hoodies premium homme &amp; femme, molleton 330 GSM. Livraison gratuite partout au Maroc — tu paies à la livraison.</p>
+        <p class="hero__sub">Zip hoodies, hoodies oversize &amp; T-shirts premium, homme &amp; femme. Livraison gratuite partout au Maroc — tu paies à la livraison.</p>
         <div class="hero__btns">
           <a href="products.html" class="btn btn--ice btn--shine"><span>Shop<span class="hide-sm"> les zip hoodies</span></span> <i data-icon="arrow"></i></a>
           <a href="#explore" class="btn btn--ghost">Explorer en 3D</a>
@@ -113,11 +113,25 @@
         <div class="sec-head" data-reveal>
           <div>
             <span class="eyebrow"><i data-icon="flake"></i>Drop 01 — Hiver 2026</span>
-            <h2>Zip <span class="ice-text">Hoodies</span></h2>
+            <h2>Le <span class="ice-text">Drop</span></h2>
           </div>
           <a class="link-arrow" href="products.html">Voir toute la collection <i data-icon="arrow"></i></a>
         </div>
         <div class="grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- SHOP BY CATEGORY (3D stacks) -->
+    <section class="sec homecats">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <div>
+            <span class="eyebrow">Shop par catégorie</span>
+            <h2>Choisis ton <span class="ice-text">style.</span></h2>
+          </div>
+          <p>Trois gammes, un seul ADN : du lourd, du propre, du froid.</p>
+        </div>
+        <div class="homecats__grid" id="homeCats"></div>
       </div>
     </section>
 
@@ -283,7 +297,21 @@
 
   <script>IC.bottom()</script>
   <script>
-    IC.renderGrid(document.getElementById('featuredGrid'), IC_PRODUCTS);
+    // Le drop: the highlighted pieces of every range
+    IC.renderGrid(document.getElementById('featuredGrid'), IC_CATEGORIES.flatMap((c) => IC_PRODUCTS.filter((p) => p.cat === c.id && p.badge).slice(0, 3)).slice(0, 8));
+
+    // Shop par catégorie: big 3D cards, 3 photos of the range fanned out in depth
+    document.getElementById('homeCats').innerHTML = IC_CATEGORIES.map((c, k) => {
+      const list = IC_PRODUCTS.filter((p) => p.cat === c.id);
+      const imgs = list.slice(0, 3).map((p) => p.images[0]);
+      return `<div data-reveal style="--d:${k * 120}ms"><a class="hcat" href="products.html?cat=${c.id}" data-tilt="6">
+        <span class="hcat__num">0${k + 1}</span>
+        <span class="hcat__stack">${imgs.map((im, i) => `<img src="${IC.img(im)}" alt="" style="--i:${i}" width="900" height="1296" loading="lazy">`).join('')}</span>
+        <span class="hcat__txt"><b>${c.label}</b><em>${c.tagline} · ${list.length} modèles · dès ${IC.money(Math.min(...list.map((p) => p.price)))}</em>
+        <span class="hcat__go">Découvrir ${IC.icon.arrow}</span></span>
+      </a></div>`;
+    }).join('');
+    IC.reveal(document.getElementById('homeCats')); IC.tilt(document.getElementById('homeCats'));
 
     // HERO — 3D photo stage: slideshow + mouse / gyro tilt + scroll depth
     (function () {
@@ -334,7 +362,7 @@
     initHero(document.getElementById('heroCanvas'), { emblem: false });
 
     const items = [];
-    IC_PRODUCTS.forEach((p) => p.images.forEach((im, k) => items.push({ p, src: IC.img(im), view: k ? 'Vue dos' : 'Vue face' })));
+    IC_CATEGORIES.forEach((c) => IC_PRODUCTS.filter((p) => p.cat === c.id).slice(0, 4).forEach((p) => items.push({ p, src: IC.img(p.images[0]), view: c.short })));
     const nameEl = document.getElementById('c3dName');
     const priceEl = document.getElementById('c3dPrice');
     const linkEl = document.getElementById('c3dLink');

@@ -22,7 +22,7 @@
   <script>IC.top({ page: 'shop' })</script>
 
   <main class="wrap">
-    <nav class="crumbs" aria-label="Fil d'Ariane" style="padding-top:20px"><a href="index.html">Accueil</a><span>/</span><a href="products.html">Zip Hoodies</a><span>/</span><span id="crumbName"></span></nav>
+    <nav class="crumbs" aria-label="Fil d'Ariane" style="padding-top:20px"><a href="index.html">Accueil</a><span>/</span><a href="products.html" id="crumbCat">Collection</a><span>/</span><span id="crumbName"></span></nav>
     <div class="pdp" id="pdp"></div>
 
     <section class="sec" style="padding-bottom:0">
@@ -48,8 +48,9 @@
       let slide = 0;
       document.title = `${p.name} — ${p.color} | IRONCOLD`;
       document.getElementById('crumbName').textContent = p.name;
+      const cc = document.getElementById('crumbCat'); cc.textContent = IC.cat(p.cat).label; cc.href = `products.html?cat=${p.cat}`;
 
-      const siblings = IC_PRODUCTS.filter((x) => x.gender === p.gender);
+      const siblings = IC_PRODUCTS.filter((x) => x.gender === p.gender && x.cat === p.cat);
       const imgs = p.images;
 
       document.getElementById('pdp').innerHTML = `
@@ -62,13 +63,13 @@
           </div>
         </div>
         <div class="info">
-          <span class="eyebrow">${I.flake} IRONCOLD · ${g}</span>
+          <span class="eyebrow">${I.flake} ${IC.cat(p.cat).label} · ${g}</span>
           <h1>${IC.esc(p.name)}</h1>
           <div class="info__price">${IC.money(p.price)} <small>Livraison gratuite · Paiement à la livraison</small></div>
           <p class="info__desc">${IC.esc(p.desc)}</p>
           <div>
             <div class="opt__label"><span>Couleur : <b>${p.color}</b></span></div>
-            <div class="colors">${siblings.map((s) => `<a class="color${s.id === p.id ? ' is-on' : ''}" href="product.html?id=${s.id}" aria-label="${s.color}"><i class="swatch swatch--${s.color === 'Noir' ? 'noir' : 'gris'}"></i>${s.color}</a>`).join('')}</div>
+            <div class="colors">${siblings.map((s) => `<a class="color${s.id === p.id ? ' is-on' : ''}" href="product.html?id=${s.id}" aria-label="${s.color}"><i class="swatch swatch--${IC.colorSlug(s.color)}"></i>${IC.esc(s.name.replace(/^IRONCOLD\s+/, ''))}</a>`).join('')}</div>
           </div>
           <div>
             <div class="opt__label"><span>Taille : <b id="sizeLabel">${size}</b></span><a href="https://wa.me/212606685735?text=${encodeURIComponent(`Salam IRONCOLD, chno taille li mnasba lia f ${p.name} ?`)}" target="_blank" rel="noopener">Aide pour la taille ?</a></div>
@@ -154,7 +155,7 @@
         }).observe(document.querySelector('.buy'));
       }
 
-      IC.renderGrid(document.getElementById('related'), IC_PRODUCTS.filter((x) => x.id !== p.id).slice(0, 4));
+      IC.renderGrid(document.getElementById('related'), IC_PRODUCTS.filter((x) => x.id !== p.id).sort((a, b) => (b.cat === p.cat) - (a.cat === p.cat)).slice(0, 3));
     })();
   </script>
 </body>

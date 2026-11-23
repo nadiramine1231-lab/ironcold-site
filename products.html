@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Zip Hoodies — Collection | IRONCOLD</title>
+  <title>Collection — Zip Hoodies, Hoodies Oversize &amp; T-Shirts | IRONCOLD</title>
   <meta name="description" content="Tous les zip hoodies IRONCOLD homme & femme. Molleton 330 GSM, zip YKK. Livraison gratuite au Maroc, paiement à la livraison.">
   <meta name="theme-color" content="#07080a">
   <link rel="icon" type="image/png" href="favicon_icon.png">
@@ -20,16 +20,19 @@
   <main>
     <section class="pbanner">
       <div class="pbanner__bg" data-marquee data-speed="24" data-dir="-1" aria-hidden="true">
-        <div class="mq__track"><div class="mq__group"><span>ZIP HOODIES</span><span>IRONCOLD</span></div></div>
+        <div class="mq__track"><div class="mq__group"><span>COLLECTION</span><span>IRONCOLD</span></div></div>
       </div>
       <div class="wrap">
         <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Collection</span></nav>
-        <h1 id="pageTitle">Zip <span class="ice-text">Hoodies</span></h1>
-        <p>Molleton 330 GSM, full-zip, emblème IC. Homme &amp; femme — livraison gratuite partout au Maroc, paiement à la livraison.</p>
+        <h1 id="pageTitle">La <span class="ice-text">Collection</span></h1>
+        <p id="pageSub">Zip hoodies, hoodies oversize et T-shirts premium. Homme &amp; femme — livraison gratuite partout au Maroc, paiement à la livraison.</p>
       </div>
     </section>
 
     <section class="wrap">
+      <!-- 3D category tiles -->
+      <div class="cattabs" id="catTabs" role="tablist" aria-label="Catégories"></div>
+
       <div class="toolbar">
         <div class="chips" id="gChips" role="group" aria-label="Filtrer par coupe">
           <button class="chip is-on" type="button" data-g="all">Tous</button>
@@ -40,17 +43,19 @@
           <div class="chips" id="cChips" role="group" aria-label="Filtrer par couleur">
             <button class="chip is-on" type="button" data-c="all">Toutes</button>
             <button class="chip" type="button" data-c="Noir"><i class="swatch swatch--noir"></i>Noir</button>
+            <button class="chip" type="button" data-c="Blanc"><i class="swatch swatch--blanc"></i>Blanc</button>
             <button class="chip" type="button" data-c="Gris chiné"><i class="swatch swatch--gris"></i>Gris</button>
           </div>
           <span id="count" aria-live="polite"></span>
           <select class="select" id="sort" aria-label="Trier">
             <option value="featured">En vedette</option>
             <option value="new">Nouveautés</option>
-            <option value="az">Nom A → Z</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
           </select>
         </div>
       </div>
-      <div class="grid" id="grid"></div>
+      <div id="groups"></div>
       <p class="empty" id="empty" hidden>Aucun produit ne correspond à ce filtre.</p>
     </section>
 
@@ -67,34 +72,65 @@
   <script>IC.bottom()</script>
   <script>
     (function () {
-      const state = { g: IC.param('g') || 'all', c: 'all', sort: 'featured' };
-      if (!['all', 'homme', 'femme'].includes(state.g)) state.g = 'all';
-      const grid = document.getElementById('grid');
-      const titles = { all: 'Zip <span class="ice-text">Hoodies</span>', homme: 'Zip hoodies <span class="ice-text">Homme</span>', femme: 'Zip hoodies <span class="ice-text">Femme</span>' };
+      const CATS = IC_CATEGORIES;
+      const q = (k) => IC.param(k);
+      const state = { cat: CATS.some((c) => c.id === q('cat')) ? q('cat') : 'all', g: ['homme', 'femme'].includes(q('g')) ? q('g') : 'all', c: 'all', sort: 'featured' };
+      const groups = document.getElementById('groups');
+      const tabs = document.getElementById('catTabs');
+
+      // 3D tiles: each category shows 3 of its photos fanned out in depth
+      const tile = (id, label, sub, imgs, n) => `
+        <button class="cattab" type="button" role="tab" data-cat="${id}" data-tilt="6">
+          <span class="cattab__stack">${imgs.map((im, i) => `<img src="${IC.img(im, true)}" alt="" style="--i:${i}" width="480" height="690" loading="lazy">`).join('')}</span>
+          <span class="cattab__txt"><b>${label}</b><em>${sub}</em></span>
+          <span class="cattab__n">${n}</span>
+        </button>`;
+      const firstImgs = (list) => list.slice(0, 3).map((p) => p.images[0]);
+      tabs.innerHTML = tile('all', 'Tout voir', 'Toute la collection', [CATS[0].cover, CATS[1].cover, CATS[2].cover], IC_PRODUCTS.length) +
+        CATS.map((c) => { const list = IC_PRODUCTS.filter((p) => p.cat === c.id); return tile(c.id, c.label, c.tagline, firstImgs(list), list.length); }).join('');
+      IC.tilt(tabs);
+
+      const sorters = {
+        featured: () => 0,
+        new: (a, b) => (b.badge === 'New') - (a.badge === 'New'),
+        'price-asc': (a, b) => a.price - b.price,
+        'price-desc': (a, b) => b.price - a.price
+      };
 
       function render() {
-        let list = IC_PRODUCTS.filter((p) => (state.g === 'all' || p.gender === state.g) && (state.c === 'all' || p.color === state.c));
-        if (state.sort === 'az') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
-        if (state.sort === 'new') list = list.slice().sort((a, b) => (b.badge === 'New') - (a.badge === 'New'));
-        IC.renderGrid(grid, list);
+        const list = IC_PRODUCTS
+          .filter((p) => (state.cat === 'all' || p.cat === state.cat) && (state.g === 'all' || p.gender === state.g) && (state.c === 'all' || p.color === state.c))
+          .slice().sort(sorters[state.sort]);
+        const shown = state.cat === 'all'
+          ? CATS.map((c) => ({ c, items: list.filter((p) => p.cat === c.id) })).filter((x) => x.items.length)
+          : [{ c: IC.cat(state.cat), items: list }];
+        groups.innerHTML = shown.map(({ c, items }) => `
+          <section class="cgroup">
+            ${state.cat === 'all' ? `<div class="cgroup__head" data-reveal><h2>${c.label}</h2><span>${items.length} modèle${items.length > 1 ? 's' : ''} · dès ${IC.money(Math.min(...items.map((p) => p.price)))}</span><button type="button" class="link-arrow" data-cat="${c.id}">Voir tout ${IC.icon.arrow}</button></div>` : ''}
+            <div class="grid">${items.map((p, i) => IC.card(p, i)).join('')}</div>
+          </section>`).join('');
+        IC.reveal(groups); IC.tilt(groups);
         document.getElementById('empty').hidden = list.length > 0;
         document.getElementById('count').textContent = `${list.length} produit${list.length > 1 ? 's' : ''}`;
-        document.getElementById('pageTitle').innerHTML = titles[state.g];
+        const cat = state.cat === 'all' ? null : IC.cat(state.cat);
+        const gLabel = state.g === 'all' ? '' : ` <span class="ice-text">${state.g === 'homme' ? 'Homme' : 'Femme'}</span>`;
+        document.getElementById('pageTitle').innerHTML = cat ? `${cat.label}${gLabel}` : `La <span class="ice-text">Collection</span>${gLabel}`;
+        document.getElementById('pageSub').textContent = cat
+          ? `${cat.tagline} Homme & femme — livraison gratuite partout au Maroc, paiement à la livraison.`
+          : 'Zip hoodies, hoodies oversize et T-shirts premium. Homme & femme — livraison gratuite partout au Maroc, paiement à la livraison.';
+        tabs.querySelectorAll('.cattab').forEach((b) => b.classList.toggle('is-on', b.dataset.cat === state.cat));
         document.querySelectorAll('#gChips .chip').forEach((b) => b.classList.toggle('is-on', b.dataset.g === state.g));
         document.querySelectorAll('#cChips .chip').forEach((b) => b.classList.toggle('is-on', b.dataset.c === state.c));
-      }
-      document.getElementById('gChips').addEventListener('click', (e) => {
-        const b = e.target.closest('[data-g]'); if (!b) return;
-        state.g = b.dataset.g;
         const url = new URL(location.href);
+        if (state.cat === 'all') url.searchParams.delete('cat'); else url.searchParams.set('cat', state.cat);
         if (state.g === 'all') url.searchParams.delete('g'); else url.searchParams.set('g', state.g);
         history.replaceState(null, '', url);
-        render();
-      });
-      document.getElementById('cChips').addEventListener('click', (e) => {
-        const b = e.target.closest('[data-c]'); if (!b) return;
-        state.c = b.dataset.c; render();
-      });
+      }
+      const setCat = (id) => { state.cat = id; render(); tabs.scrollIntoView({ behavior: IC.reduceMotion ? 'auto' : 'smooth', block: 'start' }); };
+      tabs.addEventListener('click', (e) => { const b = e.target.closest('[data-cat]'); if (b) setCat(b.dataset.cat); });
+      groups.addEventListener('click', (e) => { const b = e.target.closest('button[data-cat]'); if (b) setCat(b.dataset.cat); });
+      document.getElementById('gChips').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { state.g = b.dataset.g; render(); } });
+      document.getElementById('cChips').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { state.c = b.dataset.c; render(); } });
       document.getElementById('sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
       render();
     })();

@@ -22,10 +22,10 @@ for (const rel of INCLUDE) {
 
 // Netlify routing (works for git builds and API deploys alike)
 writeFileSync(join(dist, '_redirects'), [
-  '/tshirts.html          /products.html               301',
-  '/hoodies.html          /products.html               301',
-  '/hoodies-oversize.html /products.html               301',
-  '/zip-hoodies.html      /products.html               301',
+  '/tshirts.html          /products.html?cat=tshirt     301',
+  '/hoodies.html          /products.html?cat=oversize   301',
+  '/hoodies-oversize.html /products.html?cat=oversize   301',
+  '/zip-hoodies.html      /products.html?cat=zip        301',
   ''
 ].join('\n'));
 writeFileSync(join(dist, '_headers'), [
