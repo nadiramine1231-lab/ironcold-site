@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const INCLUDE = [
-  'index.html', 'products.html', 'product.html', 'contact.html', 'livraison.html', 'confirm.html',
+  'index.html', 'products.html', 'product.html', 'contact.html', 'livraison.html', 'confirm.html', 'admin.html',
   'favicon_icon.png', 'logo1_nobg.png',
   'css', 'js', 'images/web'
 ];
@@ -31,6 +31,11 @@ writeFileSync(join(dist, '_redirects'), [
 writeFileSync(join(dist, '_headers'), [
   '/images/*',
   '  Cache-Control: public, max-age=604800',
+  '/admin.html',
+  '  X-Robots-Tag: noindex, nofollow',
+  '  Cache-Control: no-cache',
+  '/js/admin.js',
+  '  Cache-Control: no-cache',
   '/*',
   '  X-Content-Type-Options: nosniff',
   '  Referrer-Policy: strict-origin-when-cross-origin',

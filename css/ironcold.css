@@ -962,3 +962,19 @@ html:not(.js) .gauge .gauge__val { stroke-dashoffset: calc(100 - var(--v) * 100)
   .hcat { min-height: 440px; }
   .hcat__stack img { width: 40%; }
 }
+
+/* ---------- prix barré ---------- */
+.pcard__price s, .info__price s { color: var(--muted); font-weight: 500; margin-left: 6px; font-size: .85em; }
+
+/* ---------- content from admin.html ---------- */
+html:not(.ic-editing) [data-ic-hidden] { display: none !important; }
+.ic-editing [data-ic-hidden] { opacity: .35; outline: 2px dashed var(--hot); outline-offset: -6px; }
+.ic-editing [data-reveal] { opacity: 1 !important; transform: none !important; }
+.ic-editing .hero__slide:not(.is-on) { pointer-events: none; }
+.ic-ed { border-radius: 3px; cursor: text; outline: 1px dashed transparent; outline-offset: 2px; transition: outline-color .2s, background .2s; }
+.ic-ed:hover { outline-color: rgba(166, 220, 255, .7); background: rgba(166, 220, 255, .08); }
+.ic-ed:focus { outline: 2px solid var(--ice); background: rgba(166, 220, 255, .14); }
+.ic-img { cursor: pointer !important; }
+.ic-img:hover { outline: 3px solid var(--ice); outline-offset: -3px; filter: brightness(1.08); }
+.ic-eye { position: absolute; top: 12px; right: 12px; z-index: 60; padding: 8px 12px; border-radius: 8px; background: rgba(7, 8, 10, .88); border: 1px solid var(--line-2); color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
+.ic-eye:hover { border-color: var(--ice); color: var(--ice); }

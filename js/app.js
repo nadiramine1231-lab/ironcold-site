@@ -7,7 +7,12 @@
 
   const IC = (window.IC = {});
   const PRODUCTS = window.IC_PRODUCTS || [];
-  const WA_NUMBER = '212606685735';
+  const SET = window.IC_SETTINGS || {};
+  const WA_NUMBER = String(SET.whatsapp || '212606685735').replace(/\D/g, '');
+  const WA_PRETTY = '+' + WA_NUMBER.replace(/^(\d{3})(\d)(\d{2})(\d{2})(\d{2})(\d{2})$/, '$1 $2 $3 $4 $5 $6');
+  const EMAIL = SET.email || 'contact@ironcold.ma';
+  const INSTA = SET.instagram || 'ironcold_officiel';
+  const EDIT = /[?&]icedit\b/.test(location.search) && window.parent !== window;
   const NOTIFY_URL = '/api/notify'; // Netlify Function → saved + push to the IRON COLD Commandes app
   const CART_KEY = 'ironcold_cart_v2';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15,7 +20,7 @@
 
   IC.reduceMotion = reduceMotion;
   IC.byId = (id) => PRODUCTS.find((p) => p.id === id);
-  IC.img = (name, small) => `images/web/${name}${small ? '-sm' : ''}.webp`;
+  IC.img = (name, small) => (String(name).startsWith('m/') ? `/media/${String(name).slice(2)}${small ? '-sm' : ''}.webp` : `images/web/${name}${small ? '-sm' : ''}.webp`);
   IC.money = (n) => `${n} MAD`;
   IC.colorSlug = (c) => ({ Noir: 'noir', Blanc: 'blanc' })[c] || 'gris';
   IC.cat = (id) => (window.IC_CATEGORIES || []).find((c) => c.id === id) || { id, label: '', short: '' };
@@ -40,7 +45,7 @@
   IC.icon = I;
 
   // ---------- shell markup ----------
-  const ANN = ['Livraison gratuite partout au Maroc', 'Paiement à la livraison', 'Nouveau drop — Zip Hoodies', 'Échange de taille 7 jours'];
+  const ANN = Array.isArray(SET.announcements) && SET.announcements.length ? SET.announcements.map((a) => IC.esc(a)) : ['Livraison gratuite partout au Maroc', 'Paiement à la livraison', 'Nouveau drop — Zip Hoodies', 'Échange de taille 7 jours'];
   const NAV = [
     { key: 'shop', href: 'products.html', label: 'Collection' },
     { key: 'homme', href: 'products.html?g=homme', label: 'Homme' },
@@ -71,7 +76,7 @@
         <a class="hdr__logo" href="index.html" aria-label="IRONCOLD — Accueil"><img src="logo1_nobg.png" alt="IRONCOLD" width="704" height="207"></a>
         <div class="hdr__actions">
           <a class="icon-btn hide-sm" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.wa}</a>
-          <a class="icon-btn hide-sm" href="https://www.instagram.com/ironcold_officiel/" target="_blank" rel="noopener" aria-label="Instagram">${I.ig}</a>
+          <a class="icon-btn hide-sm" href="https://www.instagram.com/${INSTA}/" target="_blank" rel="noopener" aria-label="Instagram">${I.ig}</a>
           <button class="icon-btn hdr__cart" type="button" data-cart aria-label="Ouvrir le panier">${I.bag}<span class="cart-count" data-cart-count hidden>0</span></button>
         </div>
       </div>
@@ -102,7 +107,7 @@
           <img src="logo1_nobg.png" alt="IRONCOLD" class="ftr__logo" width="704" height="207">
           <p>Sport fashion engineered for the relentless. Zip hoodies premium, pensés au Maroc.</p>
           <div class="ftr__social">
-            <a class="icon-btn icon-btn--line" href="https://www.instagram.com/ironcold_officiel/" target="_blank" rel="noopener" aria-label="Instagram">${I.ig}</a>
+            <a class="icon-btn icon-btn--line" href="https://www.instagram.com/${INSTA}/" target="_blank" rel="noopener" aria-label="Instagram">${I.ig}</a>
             <a class="icon-btn icon-btn--line" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.wa}</a>
           </div>
         </div>
@@ -119,9 +124,9 @@
           <li><a href="livraison.html#faq">FAQ</a></li>
           <li><a href="contact.html">Contact</a></li></ul></div>
         <div class="ftr__col"><h5>Contact</h5><ul>
-          <li><a href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener">WhatsApp +212 6 06 68 57 35</a></li>
-          <li><a href="mailto:contact@ironcold.ma">contact@ironcold.ma</a></li>
-          <li><a href="https://www.instagram.com/ironcold_officiel/" target="_blank" rel="noopener">@ironcold_officiel</a></li></ul></div>
+          <li><a href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener">WhatsApp ${WA_PRETTY}</a></li>
+          <li><a href="mailto:${EMAIL}">${EMAIL}</a></li>
+          <li><a href="https://www.instagram.com/${INSTA}/" target="_blank" rel="noopener">@${INSTA}</a></li></ul></div>
       </div>
       <div class="wrap ftr__bottom">
         <span>© 2026 IRONCOLD. Tous droits réservés.</span>
@@ -384,7 +389,7 @@
       <div class="pcard__info">
         <a href="product.html?id=${p.id}" class="pcard__name">${IC.esc(p.name)}</a>
         <span class="pcard__meta"><i class="swatch swatch--${IC.colorSlug(p.color)}"></i>${IC.cat(p.cat).short} · ${p.color} · ${g}</span>
-        <span class="pcard__price">${IC.money(p.price)}</span>
+        <span class="pcard__price">${IC.money(p.price)}${p.oldPrice > p.price ? ` <s>${IC.money(p.oldPrice)}</s>` : ''}</span>
       </div>
     </article>`;
   };
@@ -423,7 +428,7 @@
     const boost = 1 + Math.min(scrollVel / 260, 5);
     for (const m of marquees) {
       if (!m.visible) continue;
-      const v = m.speed * m.dir * (m.boost ? boost * scrollSign : 1);
+      const v = EDIT ? 0 : m.speed * m.dir * (m.boost ? boost * scrollSign : 1);
       m.x += v * dt;
       if (m.x <= -m.w) m.x += m.w;
       if (m.x > 0) m.x -= m.w;
@@ -480,8 +485,135 @@
     (root || document).querySelectorAll('i[data-icon]').forEach((el) => { if (I[el.dataset.icon]) el.outerHTML = I[el.dataset.icon]; });
   };
 
+  /* ---------- site content from admin.html: texts, images, hidden sections ----------
+     Every visible text of the page is a "text node" with a stable key (page + hash of the original text),
+     so the admin can change any of them without touching the HTML. */
+  const PAGE = ((location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '') || 'index');
+  const hashStr = (t) => { let h = 2166136261; for (const ch of t) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+  const SKIP = 'script,style,noscript,svg,select,option,textarea,.drawer,.modal,.toast,.ovl,[data-noedit]';
+  const GLOBAL = '.ann,.hdr,.mnav,.ftr';
+  IC.content = { texts: [], images: [], sections: [] };
+
+  function groupOf(el) {
+    if (el.closest('.ann')) return 'Bande d’annonces';
+    if (el.closest('.hdr,.mnav')) return 'Menu';
+    if (el.closest('.ftr')) return 'Pied de page';
+    const sec = el.closest('section,main > div');
+    if (!sec) return 'Page';
+    const NAMES = { bands: 'Bandes défilantes', trust: 'Garanties', pbanner: 'Bannière', tread: 'Séparateur', checker: 'Damier' };
+    const cls = sec.className.split(' ').find((c) => NAMES[c]) || (sec.querySelector('.trust') ? 'trust' : '');
+    const h = sec.getAttribute('aria-label') || (sec.querySelector('h1,h2') || {}).textContent || NAMES[cls] || sec.className.split(' ')[0];
+    return String(h).replace(/\s+/g, ' ').trim().slice(0, 40) || 'Section';
+  }
+
+  function applyContent() {
+    const texts = SET.texts || {}, images = SET.images || {}, hidden = new Set(SET.hidden || []);
+    // texts
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode(n) {
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = n.parentElement;
+        return !p || p.closest(SKIP) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = []; let n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    const seen = {};
+    nodes.forEach((node) => {
+      const text = node.nodeValue.trim();
+      const scope = node.parentElement.closest(GLOBAL) ? 'g' : PAGE;
+      const base = scope + ':' + hashStr(text);
+      seen[base] = (seen[base] || 0) + 1;
+      const key = seen[base] > 1 ? base + '.' + seen[base] : base;
+      if (texts[key] != null) node.nodeValue = node.nodeValue.replace(text, texts[key]);
+      IC.content.texts.push({ key, def: text, node, group: groupOf(node.parentElement) });
+    });
+    // images (static ones; product photos come from the catalogue)
+    document.querySelectorAll('img').forEach((img) => {
+      if (img.closest(SKIP)) return;
+      const src = img.getAttribute('src');
+      if (!src || src.startsWith('data:')) return;
+      const key = 'img:' + src;
+      if (images[key]) { img.src = IC.img(images[key]); img.removeAttribute('srcset'); }
+      IC.content.images.push({ key, def: src, img, group: groupOf(img) });
+    });
+    // sections
+    const count = {};
+    document.querySelectorAll('main > section, main > div:not([class*="tread"])').forEach((sec) => {
+      const name = sec.id || (sec.className.split(' ').filter((c) => c && c !== 'sec' && c !== 'wrap')[0]) || sec.tagName.toLowerCase();
+      count[name] = (count[name] || 0) + 1;
+      const key = `${PAGE}:sec:${name}${count[name] > 1 ? '.' + count[name] : ''}`;
+      if (hidden.has(key)) sec.setAttribute('data-ic-hidden', '');
+      IC.content.sections.push({ key, sec, group: groupOf(sec) });
+    });
+  }
+
+  /* Visual editor: the page runs inside admin.html (iframe, ?icedit). Click a text to type,
+     click a photo to replace it, eye button to hide/show a section. Changes go to the admin by postMessage. */
+  function startEditor() {
+    document.documentElement.classList.add('ic-editing');
+    const post = (m) => window.parent.postMessage(Object.assign({ source: 'ic-site' }, m), location.origin);
+    const byKey = {};
+    IC.content.texts.forEach((t) => {
+      const span = document.createElement('span');
+      span.className = 'ic-ed';
+      span.dataset.k = t.key;
+      span.setAttribute('contenteditable', 'plaintext-only');
+      span.spellcheck = false;
+      t.node.parentNode.insertBefore(span, t.node);
+      span.appendChild(t.node);
+      span.addEventListener('input', () => post({ type: 'text', key: t.key, value: span.textContent.trim(), def: t.def }));
+      span.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); span.blur(); } });
+      (byKey[t.key] = byKey[t.key] || []).push(span);
+    });
+    IC.content.images.forEach((im) => {
+      im.img.classList.add('ic-img');
+      im.img.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); post({ type: 'pick-image', key: im.key, def: im.def }); });
+    });
+    IC.content.sections.forEach((s) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ic-eye';
+      const label = () => (s.sec.hasAttribute('data-ic-hidden') ? '🙈 Section masquée — afficher' : '👁 Masquer cette section');
+      b.textContent = label();
+      b.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        s.sec.toggleAttribute('data-ic-hidden');
+        b.textContent = label();
+        post({ type: 'section', key: s.key, hidden: s.sec.hasAttribute('data-ic-hidden') });
+      });
+      if (getComputedStyle(s.sec).position === 'static') s.sec.style.position = 'relative';
+      s.sec.appendChild(b);
+    });
+    // no navigation / cart / checkout while editing
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.ic-eye')) return;
+      const a = e.target.closest('a,button,[data-cart],[data-add],[data-menu]');
+      if (a) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+    window.addEventListener('message', (e) => {
+      if (e.origin !== location.origin || !e.data || e.data.source !== 'ic-admin') return;
+      const m = e.data;
+      if (m.type === 'set-text') (byKey[m.key] || []).forEach((sp) => { sp.textContent = m.value; });
+      if (m.type === 'set-image') IC.content.images.filter((i) => i.key === m.key).forEach((i) => { i.img.src = m.url; i.img.removeAttribute('srcset'); });
+      if (m.type === 'apply') {
+        Object.entries(m.texts || {}).forEach(([k, v]) => (byKey[k] || []).forEach((sp) => { sp.textContent = v; }));
+        Object.entries(m.images || {}).forEach(([k, url]) => IC.content.images.filter((i) => i.key === k).forEach((i) => { i.img.src = url; i.img.removeAttribute('srcset'); }));
+        const hid = new Set(m.hidden || []);
+        IC.content.sections.forEach((s) => { s.sec.toggleAttribute('data-ic-hidden', hid.has(s.key)); const b = s.sec.querySelector(':scope > .ic-eye'); if (b) b.textContent = hid.has(s.key) ? '🙈 Section masquée — afficher' : '👁 Masquer cette section'; });
+      }
+    });
+    post({
+      type: 'ready', page: PAGE, title: document.title,
+      texts: IC.content.texts.map((t) => ({ key: t.key, def: t.def, group: t.group })),
+      images: IC.content.images.map((i) => ({ key: i.key, def: i.def, group: i.group })),
+      sections: IC.content.sections.map((s) => ({ key: s.key, group: s.group, hidden: s.sec.hasAttribute('data-ic-hidden') }))
+    });
+  }
+
   function init() {
     IC.icons();
+    applyContent();
     if ('IntersectionObserver' in window && !reduceMotion) {
       io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     }
@@ -519,5 +651,6 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') IC.close(); });
     document.querySelectorAll('.mnav__links a').forEach((a) => a.addEventListener('click', IC.close));
     window.addEventListener('storage', (e) => { if (e.key === CART_KEY) { cart = loadCart(); renderCart(); } });
+    if (EDIT) startEditor();
   }
 })();

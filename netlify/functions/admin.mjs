@@ -1,6 +1,8 @@
-/* /api/admin/* — used by the Android app "IRON COLD Commandes".
+/* /api/admin/* — used by the Android app "IRON COLD Commandes" and by admin.html (site editor).
    Every request needs "Authorization: Bearer <ADMIN_PASSWORD>". */
+import crypto from "node:crypto";
 import { store } from "../lib/store.mjs";
+import { getCatalog, saveCatalog } from "../lib/catalog.mjs";
 import { fcmAll, fcmReady, deviceKey } from "../lib/fcm.mjs";
 import { json, isAdmin } from "../lib/http.mjs";
 
@@ -52,6 +54,36 @@ export default async (req) => {
     if (!id) return json({ ok: false, error: "id" }, 400);
     await orders.delete(String(id));
     return json({ ok: true });
+  }
+
+  /* admin.html: the whole shop (products incl. hidden ones, categories, texts, images, settings) */
+  if (route === "catalog" && req.method === "GET") return json({ ok: true, catalog: await getCatalog() });
+
+  if (route === "catalog" && req.method === "PUT") {
+    const body = await req.json().catch(() => null);
+    if (!body || !body.catalog) return json({ ok: false, error: "catalog" }, 400);
+    try {
+      const saved = await saveCatalog(body.catalog);
+      return json({ ok: true, catalog: saved });
+    } catch (e) {
+      return json({ ok: false, error: String(e.message || e) }, 400);
+    }
+  }
+
+  /* admin.html: photo upload. The browser already resized it to WebP (900px + 480px thumbnail). */
+  if (route === "media" && req.method === "POST") {
+    const { data, small } = await req.json().catch(() => ({}));
+    const decode = (u) => {
+      const m = /^data:image\/(webp|jpeg|png);base64,([A-Za-z0-9+/=]+)$/.exec(String(u || ""));
+      return m ? { type: "image/" + m[1], buf: Buffer.from(m[2], "base64") } : null;
+    };
+    const full = decode(data), thumb = decode(small) || full;
+    if (!full || full.buf.length > 3_000_000 || thumb.buf.length > 1_500_000) return json({ ok: false, error: "image" }, 400);
+    const key = crypto.randomBytes(8).toString("hex");
+    const media = store("media");
+    await media.setBinary(key, full.buf, full.type);
+    await media.setBinary(key + "-sm", thumb.buf, thumb.type);
+    return json({ ok: true, name: "m/" + key, url: `/media/${key}.webp` });
   }
 
   if (route === "test" && req.method === "POST") {

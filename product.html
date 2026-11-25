@@ -65,7 +65,7 @@
         <div class="info">
           <span class="eyebrow">${I.flake} ${IC.cat(p.cat).label} · ${g}</span>
           <h1>${IC.esc(p.name)}</h1>
-          <div class="info__price">${IC.money(p.price)} <small>Livraison gratuite · Paiement à la livraison</small></div>
+          <div class="info__price">${IC.money(p.price)}${p.oldPrice > p.price ? ` <s>${IC.money(p.oldPrice)}</s>` : ''} <small>Livraison gratuite · Paiement à la livraison</small></div>
           <p class="info__desc">${IC.esc(p.desc)}</p>
           <div>
             <div class="opt__label"><span>Couleur : <b>${p.color}</b></span></div>

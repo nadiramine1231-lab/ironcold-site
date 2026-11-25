@@ -1,14 +1,13 @@
 /* POST /api/notify — orders (checkout) and contact messages from the site.
    Orders are saved (Netlify Blobs) for the app "IRON COLD Commandes", which gets a push notification
    with the order sound. (No Telegram any more.)
-   Prices always come from js/products.js, never from the browser. */
+   Prices always come from the catalogue (admin.html / js/products.js), never from the browser. */
 import crypto from "node:crypto";
-import "../../js/products.js";
 import { store } from "../lib/store.mjs";
+import { orderableProducts } from "../lib/catalog.mjs";
 import { fcmAll } from "../lib/fcm.mjs";
 import { json, normPhone } from "../lib/http.mjs";
 
-const PRODUCTS = globalThis.IC_PRODUCTS || [];
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, " ").trim().slice(0, max);
 
 async function handleOrder(d) {
@@ -16,6 +15,7 @@ async function handleOrder(d) {
   if (!phone) return json({ ok: false, error: "phone" }, 400);
   const prenom = clean(d.prenom, 60), nom = clean(d.nom, 60), city = clean(d.ville, 60), address = clean(d.adresse, 200);
   if (!prenom || !nom || !city || !address) return json({ ok: false, error: "fields" }, 400);
+  const PRODUCTS = await orderableProducts();
   const items = (Array.isArray(d.items) ? d.items : []).slice(0, 20).map((i) => {
     const p = PRODUCTS.find((x) => i && x.id === i.id);
     if (!p || !p.sizes.includes(i.size)) return null;
